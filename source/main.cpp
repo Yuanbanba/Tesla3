@@ -88,8 +88,8 @@ static void rebuildUI() {
 
     auto noOverlaysError = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h) {
         renderer->drawString("\uE150", false, (tsl::cfg::FramebufferWidth - 90) / 2, 300, 90, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("No Overlays found!", false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("Place your .ovl files in /switch/.overlays", false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
+        renderer->drawString("没有找到任何Overlays插件！", false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
+        renderer->drawString("请把您的.ovl文件放置到 /switch/.overlays 目录下", false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
     });
 
     u16 entries = 0;

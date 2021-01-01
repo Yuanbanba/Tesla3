@@ -33,6 +33,8 @@
 
 #include "logo_bin.h"
 
+using namespace tsl;
+
 constexpr int Module_OverlayLoader  = 348;
 
 constexpr Result ResultSuccess      = MAKERESULT(0, 0);
@@ -71,6 +73,28 @@ std::tuple<Result, std::string, std::string> getOverlayInfo(std::string filePath
 static tsl::elm::HeaderOverlayFrame *rootFrame = nullptr;
 
 static void rebuildUI() {
+    std::string jsonStr = R"(
+        {
+            "strings": [
+                {
+                    "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
+                    "value": "No Overlays found!"
+                },
+                {
+                    "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
+                    "value": "Place your .ovl files in /switch/.overlays"
+                }
+            ]
+        }
+    )";
+    std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+    fsdevMountSdmc();
+    tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
+        tsl::tr::InitTrans(lanPath, jsonStr);
+
+    });
+    fsdevUnmountDevice("sdmc");
+
     auto *overlayList = new tsl::elm::List();  
     auto *header = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
         const u8 *logo = logo_bin;
@@ -88,8 +112,8 @@ static void rebuildUI() {
 
     auto noOverlaysError = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h) {
         renderer->drawString("\uE150", false, (tsl::cfg::FramebufferWidth - 90) / 2, 300, 90, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("No Overlays found!", false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("Place your .ovl files in /switch/.overlays", false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
+        renderer->drawString("noOverlaysErrorOverlayTeslaMenuCustomDrawerText"_tr.c_str(), false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
+        renderer->drawString("noOverlaysHitOverlayTeslaMenuCustomDrawerText"_tr.c_str(), false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
     });
 
     std::vector<std::filesystem::directory_entry> overlayFiles;
@@ -113,8 +137,13 @@ static void rebuildUI() {
         auto [result, name, version] = getOverlayInfo(entry.path());
         if (result != ResultSuccess)
             continue;
+        std::string pluginName = name;
+        std::string pluginLangPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
+        tsl::hlp::doWithSmSession([&pluginLangPath, &pluginName]{
+            tsl::tr::GetNameFromLangPath(pluginLangPath, pluginName);
+        });
 
-        auto *listEntry = new tsl::elm::ListItem(name);
+        auto *listEntry = new tsl::elm::ListItem(pluginName);
         listEntry->setValue(version, true);
         listEntry->setClickListener([entry](s64 key) {
             if (key & HidNpadButton_A) {
@@ -158,7 +187,13 @@ public:
 
 class OverlayTeslaMenu : public tsl::Overlay {
 public:
-    OverlayTeslaMenu() { }
+    OverlayTeslaMenu()
+    {        
+        std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+        tsl::hlp::doWithSmSession([&lanPath]{
+            tsl::tr::InitTrans(lanPath);
+        });
+    }
     ~OverlayTeslaMenu() { }
 
     void onShow() override { 

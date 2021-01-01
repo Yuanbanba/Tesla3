@@ -137,7 +137,6 @@ static void rebuildUI() {
         auto [result, name, version] = getOverlayInfo(entry.path());
         if (result != ResultSuccess)
             continue;
-
         std::string pluginName = name;
         std::string pluginLangPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
         tsl::hlp::doWithSmSession([&pluginLangPath, &pluginName]{

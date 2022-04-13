@@ -107,9 +107,9 @@ static void rebuildUI() {
         if (result != ResultSuccess)
             continue;
 
-        tsl::hlp::doWithSmSession([name]{
+        tsl::hlp::doWithSmSession([&name]{
             std::string pluginPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
-            tsl::tr::InitTrans(pluginPath);
+            tsl::tr::GetNameFromLangPath(pluginPath, name);
         });
 
         auto *listEntry = new tsl::elm::ListItem("PluginName"_tr);
@@ -158,10 +158,24 @@ public:
 class OverlayTeslaMenu : public tsl::Overlay {
 public:
     OverlayTeslaMenu()
-    {        
+    {
+        std::string jsonStr = R"(
+            {
+                "strings": [
+                    {
+                        "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
+                        "value": "Did not find any Overlays plugs!" 
+                    },
+                    {
+                        "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
+                        "value": "Please put your .ovl file under: /switch/.overlays"
+                    }
+                ]
+            }
+        )";
         std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
-        tsl::hlp::doWithSmSession([&lanPath]{
-            tsl::tr::InitTrans(lanPath);
+        tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
+            tsl::tr::InitTrans(lanPath, jsonStr);
         });
     }
     ~OverlayTeslaMenu() { }

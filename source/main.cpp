@@ -188,10 +188,24 @@ public:
 class OverlayTeslaMenu : public tsl::Overlay {
 public:
     OverlayTeslaMenu()
-    {        
+    {
+        std::string jsonStr = R"(
+            {
+                "strings": [
+                    {
+                        "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
+                        "value": "Did not find any Overlays plugs!" 
+                    },
+                    {
+                        "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
+                        "value": "Please put your .ovl file under: /switch/.overlays"
+                    }
+                ]
+            }
+        )";
         std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
-        tsl::hlp::doWithSmSession([&lanPath]{
-            tsl::tr::InitTrans(lanPath);
+        tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
+            tsl::tr::InitTrans(lanPath, jsonStr);
         });
     }
     ~OverlayTeslaMenu() { }

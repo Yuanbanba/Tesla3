@@ -1,0 +1,12 @@
+{
+    "strings": [
+        {
+            "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
+            "value": "Did not find any Overlays plugs!"
+        },
+        {
+            "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
+            "value": "Please put your .ovl file under: /switch/.overlays"
+        }
+    ]
+}

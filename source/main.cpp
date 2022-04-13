@@ -33,6 +33,8 @@
 
 #include "logo_bin.h"
 
+using namespace tsl;
+
 constexpr int Module_OverlayLoader  = 348;
 
 constexpr Result ResultSuccess      = MAKERESULT(0, 0);
@@ -88,8 +90,8 @@ static void rebuildUI() {
 
     auto noOverlaysError = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h) {
         renderer->drawString("\uE150", false, (tsl::cfg::FramebufferWidth - 90) / 2, 300, 90, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("没有找到任何Overlays插件！", false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
-        renderer->drawString("请把您的.ovl文件放置到 /switch/.overlays 目录下", false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
+        renderer->drawString("noOverlaysErrorOverlayTeslaMenuCustomDrawerText"_tr.c_str(), false, 105, 380, 25, renderer->a(tsl::style::color::ColorText));
+        renderer->drawString("noOverlaysHitOverlayTeslaMenuCustomDrawerText"_tr.c_str(), false, 82, 410, 15, renderer->a(tsl::style::color::ColorDescription));
     });
 
     u16 entries = 0;
@@ -105,7 +107,12 @@ static void rebuildUI() {
         if (result != ResultSuccess)
             continue;
 
-        auto *listEntry = new tsl::elm::ListItem(name);
+        tsl::hlp::doWithSmSession([name]{
+            std::string pluginPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
+            tsl::tr::InitTrans(pluginPath);
+        });
+
+        auto *listEntry = new tsl::elm::ListItem("PluginName"_tr);
         listEntry->setValue(version, true);
         listEntry->setClickListener([entry, entries](s64 key) {
             if (key & HidNpadButton_A) {
@@ -150,7 +157,13 @@ public:
 
 class OverlayTeslaMenu : public tsl::Overlay {
 public:
-    OverlayTeslaMenu() { }
+    OverlayTeslaMenu()
+    {        
+        std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+        tsl::hlp::doWithSmSession([&lanPath]{
+            tsl::tr::InitTrans(lanPath);
+        });
+    }
     ~OverlayTeslaMenu() { }
 
     void onShow() override { 

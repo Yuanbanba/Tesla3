@@ -73,6 +73,28 @@ std::tuple<Result, std::string, std::string> getOverlayInfo(std::string filePath
 static tsl::elm::HeaderOverlayFrame *rootFrame = nullptr;
 
 static void rebuildUI() {
+    std::string jsonStr = R"(
+        {
+            "strings": [
+                {
+                    "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
+                    "value": "No Overlays found!"
+                },
+                {
+                    "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
+                    "value": "Place your .ovl files in /switch/.overlays"
+                }
+            ]
+        }
+    )";
+    std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+    fsdevMountSdmc();
+    tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
+        tsl::tr::InitTrans(lanPath, jsonStr);
+
+    });
+    fsdevUnmountDevice("sdmc");
+
     auto *overlayList = new tsl::elm::List();  
     auto *header = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
         const u8 *logo = logo_bin;
@@ -107,12 +129,13 @@ static void rebuildUI() {
         if (result != ResultSuccess)
             continue;
 
-        tsl::hlp::doWithSmSession([&name]{
-            std::string pluginPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
-            tsl::tr::GetNameFromLangPath(pluginPath, name);
+        std::string pluginName = name;
+        std::string pluginLangPath = std::string("sdmc:/switch/.overlays/lang/") + name + "/";
+        tsl::hlp::doWithSmSession([&pluginLangPath, &pluginName]{
+            tsl::tr::GetNameFromLangPath(pluginLangPath, pluginName);
         });
 
-        auto *listEntry = new tsl::elm::ListItem("PluginName"_tr);
+        auto *listEntry = new tsl::elm::ListItem(pluginName);
         listEntry->setValue(version, true);
         listEntry->setClickListener([entry, entries](s64 key) {
             if (key & HidNpadButton_A) {

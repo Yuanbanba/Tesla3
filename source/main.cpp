@@ -187,13 +187,7 @@ public:
 
 class OverlayTeslaMenu : public tsl::Overlay {
 public:
-    OverlayTeslaMenu()
-    {        
-        std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
-        tsl::hlp::doWithSmSession([&lanPath]{
-            tsl::tr::InitTrans(lanPath);
-        });
-    }
+    OverlayTeslaMenu() { }
     ~OverlayTeslaMenu() { }
 
     void onShow() override { 

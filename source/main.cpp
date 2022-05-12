@@ -88,11 +88,22 @@ static void rebuildUI() {
         }
     )";
     std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+    std::string sortFilePath = std::string("sdmc:/config/") + APPTITLE + "/" + "sort.cfg";
+    std::vector<std::string> sortArray{};
     fsdevMountSdmc();
     tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
         tsl::tr::InitTrans(lanPath, jsonStr);
-
     });
+    if (!std::filesystem::is_empty(sortFilePath)) {
+        std::ifstream ifs(sortFilePath, std::ifstream::in);
+        if(ifs.is_open()) {
+            std::string strPluginName;
+            while(std::getline(ifs, strPluginName)) {
+                sortArray.emplace_back(strPluginName);
+            }
+            ifs.close();
+        }
+    }
     fsdevUnmountDevice("sdmc");
 
     auto *overlayList = new tsl::elm::List();  
@@ -129,9 +140,28 @@ static void rebuildUI() {
         overlayFiles.push_back(entry);
     }
 
+    std::vector<std::filesystem::directory_entry> sortedOverlayFiles;
+    if (!sortArray.empty()) {
+        for (auto item : sortArray) {
+            for (auto ovlFileItem = overlayFiles.begin(); ovlFileItem != overlayFiles.end(); ++ovlFileItem) {
+                if ((*ovlFileItem).path().filename().string() == (item + ".ovl")) {
+                    sortedOverlayFiles.emplace_back(*ovlFileItem);
+                    overlayFiles.erase(ovlFileItem);
+                    break;
+                }
+            }
+        }
+        for (auto ovlFileItem = overlayFiles.begin(); ovlFileItem != overlayFiles.end();) {
+            sortedOverlayFiles.emplace_back(*ovlFileItem);
+            ovlFileItem = overlayFiles.erase(ovlFileItem);
+        }
+    } 
     std::sort(overlayFiles.begin(), overlayFiles.end(), [](const auto &left, const auto &right) {
         return left.path().filename() < right.path().filename();
     });
+    if (!sortedOverlayFiles.empty()) {
+        overlayFiles.swap(sortedOverlayFiles);
+    }
 
     for (const auto &entry : overlayFiles) {
         auto [result, name, version] = getOverlayInfo(entry.path());

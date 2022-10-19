@@ -75,16 +75,8 @@ static tsl::elm::HeaderOverlayFrame *rootFrame = nullptr;
 static void rebuildUI() {
     std::string jsonStr = R"(
         {
-            "strings": [
-                {
-                    "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
-                    "value": "No Overlays found!"
-                },
-                {
-                    "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
-                    "value": "Place your .ovl files in /switch/.overlays"
-                }
-            ]
+            "noOverlaysErrorOverlayTeslaMenuCustomDrawerText": "No Overlays found!",
+            "noOverlaysHitOverlayTeslaMenuCustomDrawerText": "Place your .ovl files in /switch/.overlays"
         }
     )";
     std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";

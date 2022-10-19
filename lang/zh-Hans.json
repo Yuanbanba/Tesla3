@@ -1,12 +1,4 @@
 {
-    "strings": [
-        {
-            "key": "noOverlaysErrorOverlayTeslaMenuCustomDrawerText",
-            "value": "没有找到任何Overlays插件！"
-        },
-        {
-            "key": "noOverlaysHitOverlayTeslaMenuCustomDrawerText",
-            "value": "请把您的.ovl文件放置到目录：/switch/.overlays"
-        }
-    ]
+    "noOverlaysErrorOverlayTeslaMenuCustomDrawerText": "没有找到任何Overlays插件！",
+    "noOverlaysHitOverlayTeslaMenuCustomDrawerText": "请把您的.ovl文件放置到目录：/switch/.overlays"
 }

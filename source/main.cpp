@@ -132,6 +132,10 @@ static void rebuildUI() {
         overlayFiles.push_back(entry);
     }
 
+    std::sort(overlayFiles.begin(), overlayFiles.end(), [](const auto &left, const auto &right) {
+        return left.path().filename() < right.path().filename();
+    });
+
     std::vector<std::filesystem::directory_entry> sortedOverlayFiles;
     if (!sortArray.empty()) {
         for (auto item : sortArray) {
@@ -148,9 +152,7 @@ static void rebuildUI() {
             ovlFileItem = overlayFiles.erase(ovlFileItem);
         }
     } 
-    std::sort(overlayFiles.begin(), overlayFiles.end(), [](const auto &left, const auto &right) {
-        return left.path().filename() < right.path().filename();
-    });
+
     if (!sortedOverlayFiles.empty()) {
         overlayFiles.swap(sortedOverlayFiles);
     }

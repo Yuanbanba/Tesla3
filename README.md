@@ -1,4 +1,4 @@
-#大气层特斯拉3.1.0简繁中文插件整合包-YuanBanban
+# 大气层特斯拉3.1.0简繁中文插件整合包-YuanBanban
 
 zdm65477730大佬于2023年2月5日更新switch/.overlays/ovlmenu.ovl文件，解决了tesla3.0.0非中文系统语言导致Tesla奔溃的错误，但是修复后Tesla菜单插件名称只能显示英文，进各个ovl插件不受影响，依然中英文适配。3.1.0插件包新加了两种ovlmenu.ovl，但是默认Switch/.overlays/ovlmenu.ovl是只适配简繁中文系统语言的ovlmenu.ovl。
 
@@ -14,7 +14,7 @@ tf：Switch/.overlays/ovlmenuCN/ovlmenu.ovl，把它覆盖到tf：Switch/.overla
 
 更换覆盖ovlmenu.ovl文件，既可以通过Hekate的USB工具，DBI的MTP，也可以在nxshell等文件管理器中操作。
 
-【特斯拉3.1.0测试包说明】
+# 【特斯拉3.1.0测试包说明】
 
 （1）简繁中文插件整合包基于zdm65477730大佬做的终极版tesla核心，不能兼容各种ovl原版插件，需要由大佬进行适配，目前该插件只能在简体中文或繁体中文系统下正常使用。小弟整合了大佬发布的插件，作为tesla3.0.0测试。
 
@@ -58,7 +58,7 @@ tf：Switch/.overlays/
 
 第3类是zdm65477730大佬做的终极版tesla核心，不能兼容各种ovl原版插件，需要由大佬进行适配，目前该插件只能在简体中文或繁体中文系统下正常使用。小弟整合了大佬发布的插件，作为tesla3.0.0测试版。
 
-【插件版本】
+# 【插件版本】
 
 3.0.0插件版本为2023.2.4更新，只有missioncontrol-v0.8.0原版和sys-con-v0.6.4原版两个插件不带ovl文件，可以使用原版。
 

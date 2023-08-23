@@ -1,3 +1,5 @@
+# Tesla 3.3.22是小弟单独发的最后一版，以后可下最新的大气层增强包提取。
+
 Tesla3插件包基于zdm65477730大佬做的终极版tesla核心
 
 终极版tesla地址： https://www.tekqart.com/thread-222735-1-1.html
